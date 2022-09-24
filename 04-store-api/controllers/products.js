@@ -41,6 +41,7 @@ const getAllProducts = async (req, res) => {
     });
   }
 
+  let count = Product.count(queryObject);
   let result = Product.find(queryObject);
 
   if (sort) {
@@ -58,9 +59,14 @@ const getAllProducts = async (req, res) => {
   const skip = (page - 1) * limit;
   result = result.skip(skip).limit(limit);
 
-  const products = await result;
+  const [products, results] = await Promise.all([result, count]);
 
-  res.status(200).json({ count: products.length, page, products });
+  res.status(200).json({
+    results,
+    page,
+    total_pages: Math.ceil(results / limit) || 1,
+    products,
+  });
 };
 
 module.exports = {
