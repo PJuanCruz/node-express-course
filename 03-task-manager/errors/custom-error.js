@@ -1,0 +1,12 @@
+class AppError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
+const createAppError = (message, statusCode) => {
+  return new AppError(message, statusCode);
+};
+
+module.exports = { createAppError, AppError };
